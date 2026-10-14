@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Maze Controller</title>
+    <link rel="stylesheet" href="theme.css">
+</head>
+<body>
+    <div id="hud">
+        <div id="room-info">
+            <span id="room-code">----</span>
+            <span id="ws-url">connecting…</span>
+        </div>
+        <div id="status">
+            <span id="connection-status" class="disconnected">Disconnected</span>
+            <span id="player-count">0 players</span>
+        </div>
+    </div>
+
+    <canvas id="maze-canvas"></canvas>
+
+    <div id="win-banner">Finished!</div>
+
+    <!-- maze.js must load first (defines the grid) -->
+    <script src="maze.js"></script>
+    <script src="game.js"></script>
+</body>
+</html>

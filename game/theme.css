@@ -1,0 +1,117 @@
+/* ── Font imports ─────────────────────────────────────────────
+   Falls back to system sans-serif / monospace if offline.    */
+@import url('https://fonts.googleapis.com/css2?family=Familjen+Grotesk:wght@400;600&family=IBM+Plex+Mono:wght@400&display=swap');
+
+/* ── Palette & fonts (edit these to re-theme everything) ───── */
+:root {
+    --bg:      #2D2D2D;     /* page background & maze paths       */
+    --fg:      #F0EDE8;     /* primary text                       */
+    --accent:  #D4943A;     /* amber/ochre — exit marker, highlights */
+    --accent2: #4A8C7F;     /* muted teal — secondary player      */
+    --muted:   #888888;     /* disabled / low-priority text        */
+    --surface: #3A3A3A;     /* HUD bar, panels                    */
+    --wall:    #4A4A4A;     /* maze wall cells                    */
+    --error:   #C25B56;     /* disconnected / error states        */
+    --success: #6DAF8B;     /* connected status                   */
+
+    --font-ui:   'Familjen Grotesk', sans-serif;
+    --font-mono: 'IBM Plex Mono', monospace;
+}
+
+/* ── Reset ───────────────────────────────────────────────────── */
+*, *::before, *::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background: var(--bg);
+    color: var(--fg);
+    font-family: var(--font-ui);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 100vh;
+    padding: 16px;
+}
+
+/* ── HUD (top bar) ──────────────────────────────────────────── */
+#hud {
+    width: 100%;
+    max-width: 900px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 16px;
+    margin-bottom: 12px;
+    background: var(--surface);
+    border-radius: 6px;
+}
+
+#room-info {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+#room-code {
+    font-family: var(--font-mono);
+    font-size: 22px;
+    font-weight: 600;
+    color: var(--accent);
+    letter-spacing: 3px;
+}
+
+#ws-url {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--muted);
+    word-break: break-all;
+}
+
+#status {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 4px;
+}
+
+#connection-status {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    padding: 2px 8px;
+    border-radius: 3px;
+}
+#connection-status.connected    { color: var(--success); }
+#connection-status.disconnected { color: var(--error); }
+#connection-status.error        { color: var(--error); }
+
+#player-count {
+    font-size: 12px;
+    color: var(--muted);
+}
+
+/* ── Canvas ──────────────────────────────────────────────────── */
+#maze-canvas {
+    display: block;
+    border-radius: 4px;
+}
+
+/* ── Win banner ──────────────────────────────────────────────── */
+#win-banner {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: var(--surface);
+    color: var(--accent);
+    font-family: var(--font-ui);
+    font-size: 32px;
+    font-weight: 600;
+    padding: 24px 48px;
+    border-radius: 8px;
+    border: 2px solid var(--accent);
+    z-index: 10;
+}
