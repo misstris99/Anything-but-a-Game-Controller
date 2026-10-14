@@ -29,6 +29,19 @@
             android:textColor="@color/accent"
             android:textSize="24sp" />
 
+        <!-- ── QR Scanner Button ─────────────────────────────── -->
+        <Button
+            android:id="@+id/btn_scan_qr"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:minHeight="48dp"
+            android:layout_marginBottom="20dp"
+            android:background="@color/teal"
+            android:textColor="@color/text_primary"
+            android:fontFamily="@font/familjen_grotesk_semibold"
+            android:text="@string/btn_scan_qr"
+            android:textSize="14sp" />
+
         <!-- ── Connection Section ────────────────────────────── -->
         <TextView
             android:layout_width="wrap_content"

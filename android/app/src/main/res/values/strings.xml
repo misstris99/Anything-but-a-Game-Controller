@@ -29,4 +29,9 @@
     <string name="btn_disconnect">Disconnect</string>
     <string name="label_connection">Connection</string>
     <string name="latency_placeholder">Latency: — ms</string>
+
+    <!-- QR scanning strings added in 2C -->
+    <string name="qr_prompt">Scan the QR code on the game screen</string>
+    <string name="error_invalid_qr">Invalid QR code. Expected ws://&lt;ip&gt;:&lt;port&gt;/ws?room=XXXX</string>
+    <string name="status_scanned">Scanned room %1$s. Tap Connect.</string>
 </resources>
