@@ -9,8 +9,11 @@
 <body>
     <div id="hud">
         <div id="room-info">
-            <span id="room-code">----</span>
-            <span id="ws-url">connecting…</span>
+            <div id="qrcode"></div>
+            <div id="room-details">
+                <span id="room-code">----</span>
+                <span id="ws-url">connecting…</span>
+            </div>
         </div>
         <div id="status">
             <span id="connection-status" class="disconnected">Disconnected</span>
@@ -20,8 +23,8 @@
 
     <canvas id="maze-canvas"></canvas>
 
-    <div id="win-banner">Finished!</div>
-
+    <!-- qrcode.min.js (davidshimjs/qrcodejs, MIT License) -->
+    <script src="qrcode.min.js"></script>
     <!-- maze.js must load first (defines the grid) -->
     <script src="maze.js"></script>
     <script src="game.js"></script>

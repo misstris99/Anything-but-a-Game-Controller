@@ -51,8 +51,35 @@ body {
 
 #room-info {
     display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 12px;
+}
+
+#room-details {
+    display: flex;
     flex-direction: column;
     gap: 2px;
+}
+
+#qrcode {
+    visibility: hidden;
+    width: 64px;
+    height: 64px;
+    background: #ffffff;
+    border-radius: 4px;
+    padding: 3px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+#qrcode canvas,
+#qrcode img {
+    display: block;
+    width: 100% !important;
+    height: 100% !important;
 }
 
 #room-code {

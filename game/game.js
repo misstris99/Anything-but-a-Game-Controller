@@ -31,19 +31,25 @@ var CLR = {};
 
 function loadColors() {
     var s = getComputedStyle(document.documentElement);
-    CLR.bg     = s.getPropertyValue('--bg').trim();
-    CLR.fg     = s.getPropertyValue('--fg').trim();
-    CLR.wall   = s.getPropertyValue('--wall').trim();
-    CLR.accent = s.getPropertyValue('--accent').trim();
-    CLR.muted  = s.getPropertyValue('--muted').trim();
+    CLR.bg      = s.getPropertyValue('--bg').trim();
+    CLR.fg      = s.getPropertyValue('--fg').trim();
+    CLR.wall    = s.getPropertyValue('--wall').trim();
+    CLR.accent  = s.getPropertyValue('--accent').trim();
+    CLR.muted   = s.getPropertyValue('--muted').trim();
+    CLR.surface = s.getPropertyValue('--surface').trim();
+    CLR.fontUi  = s.getPropertyValue('--font-ui').trim();
 }
+
+/* ── Win banner timer ────────────────────────────────────────── */
+var finishTimer = 0;
 
 /* ── Players ─────────────────────────────────────────────────── */
 var players = {};
-// Each player: { x, y, velX, velY, tiltX, tiltY, color, boost, won }
+// Each player: { id, x, y, velX, velY, tiltX, tiltY, color, boost, won }
 
 function addPlayer(id, color) {
     players[id] = {
+        id: id,
         x: MAZE_START.col + 0.5,
         y: MAZE_START.row + 0.5,
         velX: 0, velY: 0,
@@ -54,16 +60,22 @@ function addPlayer(id, color) {
     };
 }
 
-function respawn(id) {
-    var p = players[id];
-    if (!p) return;
-    p.x = MAZE_START.col + 0.5;
-    p.y = MAZE_START.row + 0.5;
-    p.velX = 0;
-    p.velY = 0;
-    p.won = false;
-    document.getElementById('win-banner').style.display = 'none';
+function resetBall(id) {
+    if (id !== undefined) {
+        var p = players[id];
+        if (!p) return;
+        p.x = MAZE_START.col + 0.5;
+        p.y = MAZE_START.row + 0.5;
+        p.velX = 0;
+        p.velY = 0;
+        p.won = false;
+    } else {
+        for (var pid in players) {
+            resetBall(pid);
+        }
+    }
 }
+var respawn = resetBall;
 
 /* ── Collision detection (all in grid coordinates) ───────────── */
 
@@ -112,8 +124,8 @@ function updatePlayer(p) {
 
     // Win check: ball center is inside the exit cell
     if (Math.floor(p.x) === MAZE_EXIT.col && Math.floor(p.y) === MAZE_EXIT.row) {
-        p.won = true;
-        document.getElementById('win-banner').style.display = 'block';
+        finishTimer = 90;
+        resetBall(p.id);
     }
 }
 
@@ -172,6 +184,38 @@ function draw() {
             ctx.stroke();
         }
     }
+
+    // Short "Finished!" message on the canvas after reaching the exit
+    if (finishTimer > 0) {
+        finishTimer--;
+        ctx.save();
+        var msg = 'Finished!';
+        var fontSize = Math.max(22, Math.floor(cellSize * 0.75));
+        ctx.font = '600 ' + fontSize + 'px ' + (CLR.fontUi || 'Familjen Grotesk, sans-serif');
+        var textWidth = ctx.measureText(msg).width;
+        var boxW = textWidth + 48;
+        var boxH = Math.max(50, Math.floor(cellSize * 1.3));
+        var boxX = (canvas.width - boxW) / 2;
+        var boxY = (canvas.height - boxH) / 2;
+
+        ctx.fillStyle = CLR.surface || '#3A3A3A';
+        ctx.strokeStyle = CLR.accent || '#D4943A';
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        if (ctx.roundRect) {
+            ctx.roundRect(boxX, boxY, boxW, boxH, 8);
+        } else {
+            ctx.rect(boxX, boxY, boxW, boxH);
+        }
+        ctx.fill();
+        ctx.stroke();
+
+        ctx.fillStyle = CLR.accent || '#D4943A';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText(msg, canvas.width / 2, canvas.height / 2);
+        ctx.restore();
+    }
 }
 
 /* ── WebSocket ───────────────────────────────────────────────── */
@@ -199,8 +243,23 @@ function handleMessage(msg) {
         case 'created':
             document.getElementById('room-code').textContent = msg.room;
             var port = window.location.port || '8000';
-            document.getElementById('ws-url').textContent =
-                'ws://' + msg.lanIp + ':' + port + '/ws   room ' + msg.room;
+            var fullUrl = 'ws://' + msg.lanIp + ':' + port + '/ws?room=' + msg.room;
+            document.getElementById('ws-url').textContent = fullUrl;
+
+            var qrEl = document.getElementById('qrcode');
+            if (qrEl && typeof QRCode !== 'undefined') {
+                qrEl.innerHTML = '';
+                new QRCode(qrEl, {
+                    text: fullUrl,
+                    width: 128,
+                    height: 128,
+                    colorDark: '#000000',
+                    colorLight: '#ffffff',
+                    correctLevel: QRCode.CorrectLevel.M
+                });
+                qrEl.style.visibility = 'visible';
+                resize();
+            }
             break;
 
         case 'player_joined':
@@ -227,11 +286,11 @@ function handleMessage(msg) {
             break;
 
         case 'shake':
-            respawn(msg.playerId);
+            resetBall(msg.playerId);
             break;
 
         case 'button':
-            if (msg.name === 'reset') respawn(msg.playerId);
+            if (msg.name === 'reset') resetBall(msg.playerId);
             break;
 
         case 'pong':
@@ -263,6 +322,13 @@ document.addEventListener('keydown', function (e) {
     if (e.key.startsWith('Arrow')) {
         keysDown[e.key] = true;
         e.preventDefault();
+    } else if (e.key === 'r' || e.key === 'R') {
+        if (!players['keyboard']) {
+            addPlayer('keyboard', CLR.muted || '#888888');
+            updatePlayerCount();
+        }
+        resetBall();
+        finishTimer = 0;
     }
 });
 
