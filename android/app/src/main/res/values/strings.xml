@@ -19,4 +19,14 @@
     <string name="btn_scan_qr">Scan QR</string>
     <string name="btn_calibrate">Calibrate</string>
     <string name="btn_reset">Reset ball</string>
+
+    <!-- Connection inputs and labels added in 2B -->
+    <string name="label_server_ip">Server IP</string>
+    <string name="hint_server_ip">e.g. 192.168.1.5</string>
+    <string name="label_room_code">Room Code</string>
+    <string name="hint_room_code">e.g. DJ1H</string>
+    <string name="btn_connect">Connect</string>
+    <string name="btn_disconnect">Disconnect</string>
+    <string name="label_connection">Connection</string>
+    <string name="latency_placeholder">Latency: — ms</string>
 </resources>

@@ -94,13 +94,20 @@ async def ws_endpoint(ws: WebSocket):
         first = json.loads(await ws.receive_text())
 
         if first["type"] == "create":
-            # ── Game client: create a new room ───────────────────
+            # ── Game client: create a new room or reclaim existing ───
             role = "game"
-            room_code = make_room_code()
-            rooms[room_code] = {"game": ws, "players": {}}
+            req_room = first.get("room")
+            if req_room and req_room in rooms:
+                room_code = req_room
+                rooms[room_code]["game"] = ws
+                print(f"[room {room_code}] game reconnected")
+            else:
+                room_code = make_room_code()
+                rooms[room_code] = {"game": ws, "players": {}}
+                print(f"[room {room_code}] created  (LAN {get_lan_ip()})")
+
             lan_ip = get_lan_ip()
             await send(ws, {"type": "created", "room": room_code, "lanIp": lan_ip})
-            print(f"[room {room_code}] created  (LAN {lan_ip})")
 
         elif first["type"] == "join":
             # ── Phone client: join an existing room ──────────────
@@ -175,10 +182,11 @@ async def ws_endpoint(ws: WebSocket):
         room = rooms[room_code]
 
         if role == "game":
-            # Game left: tell all phones, delete the room
-            await notify_phones(room, {"type": "game_left"})
-            del rooms[room_code]
-            print(f"[room {room_code}] game left — room deleted")
+            # Only delete the room if this socket is still the active game socket
+            if room.get("game") is ws:
+                await notify_phones(room, {"type": "game_left"})
+                del rooms[room_code]
+                print(f"[room {room_code}] game left — room deleted")
 
         elif role == "phone" and player_id:
             # Phone left: keep the slot (reconnection), clear the socket

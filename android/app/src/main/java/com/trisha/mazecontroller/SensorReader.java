@@ -157,12 +157,13 @@ public class SensorReader implements SensorEventListener {
         // Map accelerometer axes to game axes.
         //
         // Phone in portrait, tilting right → values[0] increases (positive X).
-        // game.js: positive tiltX moves the ball right. ✓ Same sign, no flip needed.
+        // game.js: positive tiltX moves the ball right. but which is considered positive is a bit unintuitive
+        // reversing X cus it feels better to me
         //
         // Phone in portrait, tilting toward you (top away from you) → values[1] decreases.
         // game.js: positive tiltY moves the ball DOWN (y increases downward on canvas).
         // So we negate Y: tilting top-away increases tiltY → ball goes down. ✓
-        float tiltX =  smoothX * ACCEL_SCALE;
+        float tiltX = -smoothX * ACCEL_SCALE;
         float tiltY = -smoothY * ACCEL_SCALE;
 
         listener.onSensorUpdate(

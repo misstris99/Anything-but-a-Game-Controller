@@ -222,12 +222,20 @@ function draw() {
 var ws = null;
 
 function connect() {
+    if (ws && (ws.readyState === WebSocket.OPEN || ws.readyState === WebSocket.CONNECTING)) {
+        return;
+    }
     var url = 'ws://' + window.location.host + '/ws';
     ws = new WebSocket(url);
 
     ws.onopen = function () {
         setStatus('connected');
-        ws.send(JSON.stringify({ type: 'create' }));
+        var roomFromUrl = new URLSearchParams(window.location.search).get('room');
+        var createMsg = { type: 'create' };
+        if (roomFromUrl) {
+            createMsg.room = roomFromUrl;
+        }
+        ws.send(JSON.stringify(createMsg));
     };
 
     ws.onmessage = function (e) {
@@ -245,6 +253,13 @@ function handleMessage(msg) {
             var port = window.location.port || '8000';
             var fullUrl = 'ws://' + msg.lanIp + ':' + port + '/ws?room=' + msg.room;
             document.getElementById('ws-url').textContent = fullUrl;
+
+            if (window.history && window.history.replaceState) {
+                var search = '?room=' + encodeURIComponent(msg.room);
+                if (window.location.search !== search) {
+                    window.history.replaceState(null, '', search);
+                }
+            }
 
             var qrEl = document.getElementById('qrcode');
             if (qrEl && typeof QRCode !== 'undefined') {

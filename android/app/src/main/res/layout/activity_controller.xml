@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
     Layout for ControllerActivity.
-    In 2A this screen only shows live sensor values for debugging.
-    The top-level ScrollView means the debug text doesn't get clipped on small screens.
+    Stage 2B adds connection controls (Server IP, Room Code, Connect button)
+    and live connection/latency status, while retaining sensor debug readouts.
 -->
 <ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
@@ -23,11 +23,90 @@
             android:id="@+id/tv_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="32dp"
+            android:layout_marginBottom="24dp"
             android:fontFamily="@font/familjen_grotesk_semibold"
             android:text="@string/app_name"
             android:textColor="@color/accent"
             android:textSize="24sp" />
+
+        <!-- ── Connection Section ────────────────────────────── -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="4dp"
+            style="@style/Label"
+            android:text="@string/label_server_ip" />
+
+        <EditText
+            android:id="@+id/et_server_ip"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:minHeight="48dp"
+            android:layout_marginBottom="16dp"
+            android:background="@color/surface"
+            android:padding="12dp"
+            style="@style/Mono"
+            android:hint="@string/hint_server_ip"
+            android:textColorHint="@color/disabled"
+            android:inputType="textUri|textNoSuggestions"
+            android:singleLine="true" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="4dp"
+            style="@style/Label"
+            android:text="@string/label_room_code" />
+
+        <EditText
+            android:id="@+id/et_room_code"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:minHeight="48dp"
+            android:layout_marginBottom="16dp"
+            android:background="@color/surface"
+            android:padding="12dp"
+            style="@style/Mono"
+            android:hint="@string/hint_room_code"
+            android:textColorHint="@color/disabled"
+            android:inputType="textCapCharacters|textNoSuggestions"
+            android:maxLength="4"
+            android:singleLine="true" />
+
+        <Button
+            android:id="@+id/btn_connect"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:minHeight="48dp"
+            android:layout_marginBottom="16dp"
+            android:background="@color/accent"
+            android:textColor="@color/bg"
+            android:fontFamily="@font/familjen_grotesk_semibold"
+            android:text="@string/btn_connect"
+            android:textSize="14sp" />
+
+        <!-- ── Connection & Latency Readout ───────────────────── -->
+        <TextView
+            android:id="@+id/tv_status"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:background="@color/surface"
+            android:padding="12dp"
+            style="@style/Mono"
+            android:text="@string/status_disconnected"
+            android:textColor="@color/disabled" />
+
+        <TextView
+            android:id="@+id/tv_latency"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="28dp"
+            android:background="@color/surface"
+            android:padding="12dp"
+            style="@style/Mono"
+            android:text="@string/latency_placeholder"
+            android:textColor="@color/disabled" />
 
         <!-- ── Accelerometer section ─────────────────────────── -->
         <TextView
@@ -37,15 +116,11 @@
             style="@style/Label"
             android:text="@string/label_accel" />
 
-        <!--
-            Each sensor readout is one TextView updated every sensor tick.
-            IBM Plex Mono keeps the numbers from jumping left/right as they change.
-        -->
         <TextView
             android:id="@+id/tv_accel"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="24dp"
+            android:layout_marginBottom="16dp"
             android:background="@color/surface"
             android:padding="12dp"
             style="@style/Mono"
@@ -63,18 +138,13 @@
             android:id="@+id/tv_gyro"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="24dp"
+            android:layout_marginBottom="16dp"
             android:background="@color/surface"
             android:padding="12dp"
             style="@style/Mono"
             android:text="x: —  y: —  z: —" />
 
         <!-- ── Computed tilt output ───────────────────────────── -->
-        <!--
-            This is the value we would send as {"type":"tilt","x":...,"y":...}.
-            Showing it here lets us verify the mapping is correct before
-            we wire up the WebSocket in 2B.
-        -->
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
