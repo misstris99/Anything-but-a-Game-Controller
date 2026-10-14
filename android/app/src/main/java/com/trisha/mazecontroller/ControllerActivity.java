@@ -119,6 +119,10 @@ public class ControllerActivity extends AppCompatActivity
         super.onPause();
         // Stop reading hardware sensors when invisible to save battery
         sensorReader.unregister();
+        // Zero out tilt so the ball stops moving if the app is backgrounded
+        if (socketClient != null) {
+            socketClient.setLatestTilt(0f, 0f);
+        }
     }
 
     @Override
