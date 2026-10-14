@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Background — same as game's -bg CSS variable -->
+    <color name="bg">#2D2D2D</color>
+
+    <!-- Surface — slightly lighter, used for cards/panels -->
+    <color name="surface">#333333</color>
+
+    <!-- Primary text -->
+    <color name="text_primary">#F0EDE8</color>
+
+    <!-- Amber accent — highlights, connected state -->
+    <color name="accent">#D4943A</color>
+
+    <!-- Teal — secondary player color, also used for secondary UI -->
+    <color name="teal">#4A8C7F</color>
+
+    <!-- Disabled / muted text -->
+    <color name="disabled">#888888</color>
+
+    <!-- Red — error / disconnected state -->
+    <color name="error">#C25B56</color>
+</resources>

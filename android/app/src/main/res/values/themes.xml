@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--
+        We inherit from Theme.AppCompat (not Material3) because it requires
+        less setup and we're doing a minimal functional UI anyway.
+        NoActionBar removes the default title bar at the top.
+    -->
+    <style name="Theme.MazeController" parent="Theme.AppCompat.NoActionBar">
+        <item name="android:windowBackground">@color/bg</item>
+        <item name="android:statusBarColor">@color/bg</item>
+        <item name="android:navigationBarColor">@color/bg</item>
+        <item name="android:textColor">@color/text_primary</item>
+    </style>
+
+    <!--
+        Reusable style for the mono-font status/readout TextViews.
+        Applied via style="@style/Mono" in the layout.
+    -->
+    <style name="Mono">
+        <item name="android:fontFamily">@font/ibm_plex_mono_regular</item>
+        <item name="android:textColor">@color/text_primary</item>
+        <item name="android:textSize">13sp</item>
+    </style>
+
+    <!--
+        Reusable style for section label TextViews.
+    -->
+    <style name="Label">
+        <item name="android:fontFamily">@font/familjen_grotesk_regular</item>
+        <item name="android:textColor">@color/disabled</item>
+        <item name="android:textSize">11sp</item>
+        <item name="android:textAllCaps">true</item>
+        <item name="android:letterSpacing">0.08</item>
+    </style>
+</resources>

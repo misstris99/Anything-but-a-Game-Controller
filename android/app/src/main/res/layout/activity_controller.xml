@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Layout for ControllerActivity.
+    In 2A this screen only shows live sensor values for debugging.
+    The top-level ScrollView means the debug text doesn't get clipped on small screens.
+-->
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/bg"
+    android:fillViewport="true"
+    android:keepScreenOn="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="24dp">
+
+        <!-- ── App title ─────────────────────────────────────── -->
+        <TextView
+            android:id="@+id/tv_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="32dp"
+            android:fontFamily="@font/familjen_grotesk_semibold"
+            android:text="@string/app_name"
+            android:textColor="@color/accent"
+            android:textSize="24sp" />
+
+        <!-- ── Accelerometer section ─────────────────────────── -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="4dp"
+            style="@style/Label"
+            android:text="@string/label_accel" />
+
+        <!--
+            Each sensor readout is one TextView updated every sensor tick.
+            IBM Plex Mono keeps the numbers from jumping left/right as they change.
+        -->
+        <TextView
+            android:id="@+id/tv_accel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="24dp"
+            android:background="@color/surface"
+            android:padding="12dp"
+            style="@style/Mono"
+            android:text="x: —  y: —  z: —" />
+
+        <!-- ── Gyroscope section ──────────────────────────────── -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="4dp"
+            style="@style/Label"
+            android:text="@string/label_gyro" />
+
+        <TextView
+            android:id="@+id/tv_gyro"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="24dp"
+            android:background="@color/surface"
+            android:padding="12dp"
+            style="@style/Mono"
+            android:text="x: —  y: —  z: —" />
+
+        <!-- ── Computed tilt output ───────────────────────────── -->
+        <!--
+            This is the value we would send as {"type":"tilt","x":...,"y":...}.
+            Showing it here lets us verify the mapping is correct before
+            we wire up the WebSocket in 2B.
+        -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="4dp"
+            style="@style/Label"
+            android:text="@string/label_tilt_out" />
+
+        <TextView
+            android:id="@+id/tv_tilt_out"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/surface"
+            android:padding="12dp"
+            style="@style/Mono"
+            android:textColor="@color/accent"
+            android:text="x: —  y: —" />
+
+    </LinearLayout>
+
+</ScrollView>

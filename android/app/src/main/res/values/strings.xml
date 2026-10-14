@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Maze Controller</string>
+
+    <!-- Status line shown below the room code -->
+    <string name="status_connecting">Connecting…</string>
+    <string name="status_connected">Connected</string>
+    <string name="status_disconnected">Disconnected</string>
+    <string name="status_error">Connection error</string>
+    <string name="status_game_ended">Game ended</string>
+    <string name="status_room_not_found">Room not found</string>
+
+    <!-- Sensor debug labels shown in 2A -->
+    <string name="label_accel">Accelerometer (m/s²)</string>
+    <string name="label_gyro">Gyroscope (rad/s)</string>
+    <string name="label_tilt_out">Tilt sent (x, y)</string>
+
+    <!-- Buttons added in later substages -->
+    <string name="btn_scan_qr">Scan QR</string>
+    <string name="btn_calibrate">Calibrate</string>
+    <string name="btn_reset">Reset ball</string>
+</resources>

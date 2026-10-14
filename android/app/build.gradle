@@ -1,0 +1,42 @@
+plugins {
+    id 'com.android.application'
+}
+
+android {
+    namespace 'com.trisha.mazecontroller'
+    compileSdk 34
+
+    defaultConfig {
+        applicationId "com.trisha.mazecontroller"
+        minSdk 26          // Android 8.0 — gives us modern sensor APIs
+        targetSdk 34
+        versionCode 1
+        versionName "1.0"
+    }
+
+    compileOptions {
+        // Java 11 source/target is required by OkHttp 4.x
+        sourceCompatibility JavaVersion.VERSION_11
+        targetCompatibility JavaVersion.VERSION_11
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+        }
+    }
+}
+
+dependencies {
+    // OkHttp 4.12.0 — WebSocket client. Works with Java 11 and minSdk 26.
+    implementation 'com.squareup.okhttp3:okhttp:4.12.0'
+
+    // ZXing barcode scanning (QR code reader for joining rooms).
+    // journeyapps wrapper handles the camera permission and UI for us.
+    // 4.3.0 is the last version that compiles cleanly against AGP 8.x without Kotlin.
+    implementation 'com.journeyapps:zxing-android-embedded:4.3.0'
+
+    // Standard Android support libraries
+    implementation 'androidx.appcompat:appcompat:1.7.0'
+    implementation 'com.google.android.material:material:1.12.0'
+}

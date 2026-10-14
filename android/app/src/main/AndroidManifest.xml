@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!--
+        INTERNET: needed to open the WebSocket connection to the server.
+        We use ws:// (not wss://) because the server runs on a LAN without HTTPS.
+        usesCleartextTraffic in the application tag below allows this.
+    -->
+    <uses-permission android:name="android.permission.INTERNET" />
+
+    <!--
+        CAMERA: needed by ZXing to scan QR codes.
+        We declare it here; Android will show the permission dialog at runtime
+        when the user tries to scan (we request it in ControllerActivity).
+    -->
+    <uses-permission android:name="android.permission.CAMERA" />
+
+    <!--
+        usesCleartextTraffic="true" is required because we connect to ws://
+        (plain WebSocket) instead of wss:// (encrypted WebSocket).
+        On a private LAN this is fine — the traffic never leaves your router.
+        If you ever deploy this to the internet, switch to wss://.
+    -->
+    <application
+        android:allowBackup="true"
+        android:label="@string/app_name"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.MazeController"
+        android:usesCleartextTraffic="true">
+
+        <!--
+            screenOrientation="portrait": the controller only makes sense
+            held vertically — landscape would flip the tilt axes.
+            android:keepScreenOn: the screen must not dim while you're tilting the phone.
+        -->
+        <activity
+            android:name=".ControllerActivity"
+            android:exported="true"
+            android:screenOrientation="portrait">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+    </application>
+
+</manifest>
