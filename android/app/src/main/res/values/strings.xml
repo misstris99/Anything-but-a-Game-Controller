@@ -15,10 +15,11 @@
     <string name="label_gyro">Gyroscope (rad/s)</string>
     <string name="label_tilt_out">Tilt sent (x, y)</string>
 
-    <!-- Buttons added in later substages -->
+    <!-- Buttons and controls added in later substages -->
     <string name="btn_scan_qr">Scan QR</string>
     <string name="btn_calibrate">Calibrate</string>
     <string name="btn_reset">Reset ball</string>
+    <string name="status_calibrated">Calibrated</string>
 
     <!-- Connection inputs and labels added in 2B -->
     <string name="label_server_ip">Server IP</string>

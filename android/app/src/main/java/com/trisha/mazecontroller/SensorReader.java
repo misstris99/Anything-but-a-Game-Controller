@@ -51,6 +51,10 @@ public class SensorReader implements SensorEventListener {
     private float smoothY = 0f;
     private float smoothZ = 0f;
 
+    // Offsets set by calibrate() representing the neutral holding angle
+    private float offsetX = 0f;
+    private float offsetY = 0f;
+
     // Last raw gyroscope values (for display only in 2A)
     private float gyroX = 0f;
     private float gyroY = 0f;
@@ -125,6 +129,15 @@ public class SensorReader implements SensorEventListener {
         sensorManager.unregisterListener(this);
     }
 
+    /**
+     * Stores current smoothed accelerometer readings as neutral offset.
+     * When holding the phone at an angle, this zeroes out tilt in that position.
+     */
+    public void calibrate() {
+        offsetX = smoothX;
+        offsetY = smoothY;
+    }
+
     // ── SensorEventListener callbacks ─────────────────────────────
 
     @Override
@@ -163,8 +176,11 @@ public class SensorReader implements SensorEventListener {
         // Phone in portrait, tilting toward you (top away from you) → values[1] decreases.
         // game.js: positive tiltY moves the ball DOWN (y increases downward on canvas).
         // So we negate Y: tilting top-away increases tiltY → ball goes down. ✓
-        float tiltX = -smoothX * ACCEL_SCALE;
-        float tiltY = -smoothY * ACCEL_SCALE;
+        float calibratedX = smoothX - offsetX;
+        float calibratedY = smoothY - offsetY;
+
+        float tiltX = -calibratedX * ACCEL_SCALE;
+        float tiltY = -calibratedY * ACCEL_SCALE;
 
         listener.onSensorUpdate(
             tiltX, tiltY,

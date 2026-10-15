@@ -114,12 +114,59 @@
             android:id="@+id/tv_latency"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="28dp"
+            android:layout_marginBottom="16dp"
             android:background="@color/surface"
             android:padding="12dp"
             style="@style/Mono"
             android:text="@string/latency_placeholder"
             android:textColor="@color/disabled" />
+
+        <!-- ── Gameplay Controls ──────────────────────────────── -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="4dp">
+
+            <Button
+                android:id="@+id/btn_calibrate"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginEnd="6dp"
+                android:minHeight="48dp"
+                android:background="@color/teal"
+                android:textColor="@color/text_primary"
+                android:fontFamily="@font/familjen_grotesk_semibold"
+                android:text="@string/btn_calibrate"
+                android:textSize="14sp" />
+
+            <Button
+                android:id="@+id/btn_reset"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginStart="6dp"
+                android:minHeight="48dp"
+                android:background="@color/accent"
+                android:textColor="@color/bg"
+                android:fontFamily="@font/familjen_grotesk_semibold"
+                android:text="@string/btn_reset"
+                android:textSize="14sp"
+                android:enabled="false" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/tv_calibrate_status"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="24dp"
+            android:gravity="center"
+            android:minHeight="18dp"
+            style="@style/Mono"
+            android:text=""
+            android:textColor="@color/accent"
+            android:textSize="12sp" />
 
         <!-- ── Accelerometer section ─────────────────────────── -->
         <TextView

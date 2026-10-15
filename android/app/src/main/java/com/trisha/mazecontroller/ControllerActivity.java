@@ -3,6 +3,8 @@ package com.trisha.mazecontroller;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
@@ -50,6 +52,19 @@ public class ControllerActivity extends AppCompatActivity
     private TextView tvStatus;
     private TextView tvLatency;
 
+    // Gameplay control UI
+    private Button btnCalibrate;
+    private Button btnReset;
+    private TextView tvCalibrateStatus;
+
+    // Handler and Runnable for clearing the "Calibrated" status line after 1.5 seconds
+    private final Handler mainHandler = new Handler(Looper.getMainLooper());
+    private final Runnable clearCalibratedRunnable = () -> {
+        if (tvCalibrateStatus != null) {
+            tvCalibrateStatus.setText("");
+        }
+    };
+
     // Sensor debug readouts
     private TextView tvAccel;
     private TextView tvGyro;
@@ -91,6 +106,11 @@ public class ControllerActivity extends AppCompatActivity
         tvGyro    = findViewById(R.id.tv_gyro);
         tvTiltOut = findViewById(R.id.tv_tilt_out);
 
+        // Bind gameplay control views
+        btnCalibrate      = findViewById(R.id.btn_calibrate);
+        btnReset          = findViewById(R.id.btn_reset);
+        tvCalibrateStatus = findViewById(R.id.tv_calibrate_status);
+
         // Initialize delegates
         sensorReader = new SensorReader(this, this);
         socketClient = new SocketClient(this);
@@ -103,6 +123,12 @@ public class ControllerActivity extends AppCompatActivity
 
         btnScanQr.setOnClickListener(v -> launchQrScanner());
         btnConnect.setOnClickListener(v -> toggleConnection());
+
+        btnCalibrate.setOnClickListener(v -> onCalibrateClicked());
+        btnReset.setOnClickListener(v -> socketClient.sendResetButton());
+
+        // Calibrate is always enabled; Reset is enabled only when connected
+        setResetButtonEnabled(false);
     }
 
     // ── Activity lifecycle ─────────────────────────────────────────
@@ -128,6 +154,7 @@ public class ControllerActivity extends AppCompatActivity
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        mainHandler.removeCallbacks(clearCalibratedRunnable);
         if (socketClient != null) {
             socketClient.disconnect();
         }
@@ -296,6 +323,7 @@ public class ControllerActivity extends AppCompatActivity
                     etRoomCode.setEnabled(false);
                     tvStatus.setText(R.string.status_connecting);
                     tvStatus.setTextColor(ContextCompat.getColor(this, R.color.accent));
+                    setResetButtonEnabled(false);
                     break;
 
                 case CONNECTED:
@@ -304,6 +332,7 @@ public class ControllerActivity extends AppCompatActivity
                     btnScanQr.setEnabled(false);
                     etServerIp.setEnabled(false);
                     etRoomCode.setEnabled(false);
+                    setResetButtonEnabled(true);
                     break;
 
                 case DISCONNECTED:
@@ -314,6 +343,7 @@ public class ControllerActivity extends AppCompatActivity
                     etRoomCode.setEnabled(true);
                     tvLatency.setText(R.string.latency_placeholder);
                     tvLatency.setTextColor(ContextCompat.getColor(this, R.color.disabled));
+                    setResetButtonEnabled(false);
                     break;
             }
         });
@@ -374,6 +404,18 @@ public class ControllerActivity extends AppCompatActivity
     }
 
     // ── Private helpers ────────────────────────────────────────────
+
+    private void onCalibrateClicked() {
+        sensorReader.calibrate();
+        tvCalibrateStatus.setText(R.string.status_calibrated);
+        mainHandler.removeCallbacks(clearCalibratedRunnable);
+        mainHandler.postDelayed(clearCalibratedRunnable, 1500);
+    }
+
+    private void setResetButtonEnabled(boolean enabled) {
+        btnReset.setEnabled(enabled);
+        btnReset.setAlpha(enabled ? 1.0f : 0.4f);
+    }
 
     private void updateDebugDisplay() {
         tvAccel.setText(formatXYZ(latestAx, latestAy, latestAz));

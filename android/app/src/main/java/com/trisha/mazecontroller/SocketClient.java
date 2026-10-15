@@ -212,6 +212,32 @@ public class SocketClient {
         }
     }
 
+    /**
+     * Sends a button message to reset the player's ball position in the maze.
+     * Only sends if currently connected.
+     */
+    public void sendResetButton() {
+        if (webSocket == null || currentState != State.CONNECTED) {
+            Log.w(TAG, "Cannot send reset button: socket is not connected");
+            return;
+        }
+
+        try {
+            JSONObject msg = new JSONObject();
+            msg.put("type", "button");
+            msg.put("name", "reset");
+
+            boolean sent = webSocket.send(msg.toString());
+            if (!sent) {
+                Log.e(TAG, "Failed to send reset button message: queue full or socket closed");
+                notifyError("Failed to send reset command");
+            }
+        } catch (JSONException e) {
+            Log.e(TAG, "Failed to serialize reset button message", e);
+            notifyError("JSON error: " + e.getMessage());
+        }
+    }
+
     // ── WebSocket listener implementation ──────────────────────────
 
     private class SocketListener extends WebSocketListener {
