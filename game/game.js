@@ -10,6 +10,7 @@ var BALL_RADIUS      = 0.28;    // ball size as a fraction of one cell
 var BOOST_MULTIPLIER = 2.5;     // speed factor during a flick boost
 var BOOST_FRAMES     = 15;      // how long a flick boost lasts (frames)
 var DEBUG_KEY_FORCE  = 3.0;     // simulated tilt strength from arrow keys
+var RESET_FREEZE_MS  = 500;     // delay after reset before tilt moves the ball (ms)
 
 /* ── Canvas ──────────────────────────────────────────────────── */
 var canvas = document.getElementById('maze-canvas');
@@ -56,7 +57,8 @@ function addPlayer(id, color) {
         tiltX: 0, tiltY: 0,
         color: color,
         boost: 0,
-        won: false
+        won: false,
+        freezeUntil: 0
     };
 }
 
@@ -69,6 +71,7 @@ function resetBall(id) {
         p.velX = 0;
         p.velY = 0;
         p.won = false;
+        p.freezeUntil = Date.now() + RESET_FREEZE_MS;
     } else {
         for (var pid in players) {
             resetBall(pid);
@@ -97,6 +100,14 @@ function hitsWall(cx, cy) {
 
 function updatePlayer(p) {
     if (p.won) return;
+
+    if (p.freezeUntil && Date.now() < p.freezeUntil) {
+        p.x = MAZE_START.col + 0.5;
+        p.y = MAZE_START.row + 0.5;
+        p.velX = 0;
+        p.velY = 0;
+        return;
+    }
 
     var sens = (p.boost > 0) ? TILT_SENSITIVITY * BOOST_MULTIPLIER : TILT_SENSITIVITY;
 
